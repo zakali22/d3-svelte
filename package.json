@@ -19,11 +19,18 @@
 		"@sveltejs/kit": "^2.0.0",
 		"@sveltejs/vite-plugin-svelte": "^3.0.0",
 		"@types/d3-array": "^3.2.1",
+		"@types/d3-format": "^3.0.4",
 		"@types/d3-scale": "^4.0.8",
 		"@types/eslint": "^9.6.0",
 		"d3": "^7.9.0",
 		"d3-array": "^3.2.4",
+		"d3-drag": "^3.0.0",
+		"d3-format": "^3.1.0",
+		"d3-geo": "^3.1.1",
 		"d3-scale": "^4.0.2",
+		"d3-selection": "^3.0.0",
+		"d3-timer": "^3.0.1",
+		"d3-zoom": "^3.0.0",
 		"eslint": "^9.0.0",
 		"eslint-config-prettier": "^9.1.0",
 		"eslint-plugin-svelte": "^2.36.0",
@@ -40,6 +47,8 @@
 	"type": "module",
 	"dependencies": {
 		"@types/d3-force": "^3.0.10",
-		"d3-force": "^3.0.0"
+		"d3-force": "^3.0.0",
+		"topojson": "^3.0.2",
+		"topojson-client": "^3.1.0"
 	}
 }

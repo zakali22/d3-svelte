@@ -20,6 +20,15 @@
 			<li aria-current={$page.url.pathname === '/beeswarm' ? 'page' : undefined}>
 				<a href="/beeswarm">Beeswarm</a>
 			</li>
+			<li aria-current={$page.url.pathname === '/geo' ? 'page' : undefined}>
+				<a href="/geo">Rotating globe</a>
+			</li>
+			<li aria-current={$page.url.pathname === '/geoMercator' ? 'page' : undefined}>
+				<a href="/geoMercator">Zoomable Globe</a>
+			</li>
+			<li aria-current={$page.url.pathname === '/geoMercator' ? 'page' : undefined}>
+				<a href="/geoAlbersCountry">Individual country</a>
+			</li>
 		</ul>
 		<svg viewBox="0 0 2 3" aria-hidden="true">
 			<path d="M0,0 L0,3 C0.5,3 0.5,3 1,2 L2,0 Z" />

@@ -2,14 +2,18 @@
     export let colorScale;
     export let data;
 
+    import populationData from "../../data/population-data.json";
     import { spring } from "svelte/motion"
+    import { max } from "d3-array"
 
     const markerPos = spring(0, { stiffness: 0.1, damping: 0.8 });
-    const totalPopulation = colorScale.domain()[1]
+    // @ts-ignore
+    const totalPopulation = max(populationData, (d) => d.population)
 
-    $: if(data && data.country) {
+   // @ts-ignore
+     $: if(data && data.country) {
         $markerPos = (data.population / totalPopulation) * 100
-        // console.log($markerPos)
+        console.log((data.population / totalPopulation) * 100)
     }
 </script>
 
@@ -40,26 +44,27 @@
 
     .legend-scale__wrapper {
         display: flex;
-        align-items: center;
+        align-items: flex-end;
     }
 
     .legend-scale__wrapper p {
-        color: rgba(255, 255, 255, 0.7);
+        color: var(--font-colour, #fff);
         font-size: 18px;
         font-weight: 300;
+        margin: 0;
     }
 
     .legend-scale__wrapper div {
         position: relative;
         width: 100%;
-        height: 28px;
+        height: 20px;
         margin: 0 7px;
     }
 
     .legend-scale__wrapper div span {
         position: absolute;
-        width: 1px;
+        width: 3px;
         height: 100%;
-        background-color: #fff;
+        background-color: var(--font-colour, #fff);
     }
 </style>

@@ -3,7 +3,7 @@
     import world from "../../data/geodata.json";
     import populationData from "../../data/population-data.json";
     import * as topojson from "topojson-client";
-    import { zoomIdentity } from "d3"
+    import { zoomIdentity, scaleThreshold, range, scaleSequential, schemeYlOrRd, interpolateYlOrRd, format, pointer } from "d3"
     import { geoPath, geoMercator } from "d3-geo"
     import { scaleLinear } from "d3-scale"
     import { max } from "d3-array"
@@ -30,38 +30,65 @@
     })
 
     /** Define projection */
-    let width = 2000, height = 800
-    $: projection = geoMercator()
-        .scale(1200 / 5)
-        .translate([2000 / 2, 500])
+    let width = 1700, height = width / 2
+    $: projection = geoMercator().scale(width / 8).translate([width / 2, height / 1.4])
 
     /** Path function to convert coord into svg path */
     $: path = geoPath(projection)
 
 
     /** Color scale for population */
-    const colorScale = scaleLinear()
-        .domain([0, max(populationData, d => d.population)])
-        .range(["#E9D99F", "#9D2020"]);
+    const colorScale = scaleThreshold()
+        .domain([
+            max(populationData, (d) => d.population * 0.0212), /** 30M */
+            max(populationData, (d) => d.population * 0.0424), /** 60M */
+            max(populationData, (d) => d.population * 0.07092), /** 100M */
+            max(populationData, (d) => d.population * 0.5) /** 700M */
+        ])
+        .range(schemeYlOrRd[5]);
 
+    const legendScale = scaleSequential(interpolateYlOrRd)
 
     let isDragging = false;
-    let tooltipData = null;
 
-    /** Zoom */
     let globe;
-    $:  {
-        const element = select(globe)
-        element.call(
-            zoom().on("zoom", (evt) => {
-                const { x, y, k } = evt.transform
+    let selectedGlobe;
+    let gTransform = {x: 0, y: 0, k: 1}, gStrokeWidth;
 
-                
+    let clickedCountryData = null
 
-                console.log(x, y, k)
-            })
-        )
+    const zoomTransform = zoom()
+        .scaleExtent([1, 10])
+        .on("zoom", zoomed)
+
+    function zoomed(evt){
+        const { transform } = evt
+
+        gTransform = transform;
+        gStrokeWidth = 1 / transform.k;
     }
+    
+    function handleZoom(e, country){
+        const [ [x0, y0], [x1, y1] ] = path.bounds(country)
+
+        clickedCountryData = country
+
+        selectedGlobe.transition().duration(750).call(
+            zoomTransform.transform,            
+            zoomIdentity
+                .translate(width / 2, height / 2)
+                .scale(Math.min(8, 0.9 / Math.max((x1 - x0) / width, (y1 - y0) / height)))
+                .translate(-(x0 + x1) / 2, -(y0 + y1) / 2),
+            pointer(e, globe)
+        )
+
+        console.log(clickedCountryData)
+    }
+
+    onMount(() => {
+        selectedGlobe = select(globe)
+        selectedGlobe.call(zoomTransform)
+    })
     
 </script>
 
@@ -73,49 +100,49 @@
 
     <div class="chart-container" bind:clientWidth={width}>
 
-        <svg {width} {height} bind:this={globe}>
+        <svg {width} {height} viewBox="0, 0, {width}, {height}"  bind:this={globe}>
             <!-- Countries -->
             <!-- svelte-ignore a11y-click-events-have-key-events -->
             <!-- svelte-ignore a11y-no-static-element-interactions -->
-
-            {#each countries.sort((a,b) => b.population - a.population) as country}
-                <!-- svelte-ignore a11y-no-noninteractive-tabindex -->
-                <path 
-                    class="country"
-                    d={path(country)} 
-                    fill={colorScale(country?.population || 0)} 
-                    stroke="none" 
-                    on:click={() => {
-                        tooltipData = country
-                    }}
-                    on:focus={() => {
-                        tooltipData = country
-                    }}
-                    tabindex="0"
-                />
-            {/each}
-
-            <!-- Borders -->
-            <path d={path(borders)} fill="none" stroke="#000" />
-
-            <!-- Selected country highlight -->
-            {#if tooltipData}
-                {#key tooltipData.id}
+            <g transform="translate({gTransform.x}, {gTransform.y}) scale({gTransform.k})">
+                {#each countries.sort((a,b) => b.population - a.population) as country}
+                    <!-- svelte-ignore a11y-no-noninteractive-tabindex -->
+                    <!-- {console.log(country)} -->
                     <path 
-                        d={path(tooltipData)}
-                        fill="transparent"
-                        stroke="red"
-                        stroke-width="2"
+                        class="country"
+                        d={path(country)} 
+                        fill={colorScale(country?.population || 0)} 
+                        stroke="#000" 
+                        stroke-width="1"
+                        on:click={(e) => {
+                            handleZoom(e, country)
+                        }}
+                        tabindex="0"
                     />
-                {/key}
-            {/if}
+                {/each}
+
+                <!-- Borders -->
+                <path d={path(borders)} fill="none" stroke="#000" />
+
+                <!-- Selected country highlight -->
+                {#if clickedCountryData}
+                    {#key clickedCountryData.id}
+                        <path 
+                            d={path(clickedCountryData)}
+                            fill="transparent"
+                            stroke="#000"
+                            stroke-width="2"
+                        />
+                    {/key}
+                {/if}
+            </g>
         </svg>
 
-        {#if tooltipData && tooltipData.country}
-            <Tooltip data={tooltipData} />
+        {#if clickedCountryData && clickedCountryData.country}
+            <Tooltip --font-colour="#000" --bg-colour="#fff" data={clickedCountryData} />
         {/if}
 
-        <Legend {colorScale} data={tooltipData}  />
+        <Legend --font-colour="#000" colorScale={legendScale} data={clickedCountryData}  />
     </div>
 </div>
 

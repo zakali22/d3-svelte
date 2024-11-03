@@ -23,7 +23,7 @@
 
     let colorScale = scaleThreshold()
         .domain(range(2, 10))
-        .range(schemeGnBu[7])
+        .range(schemeGnBu[9])
 
     /** Generate paths for county data */
     let USCounties = []
@@ -57,11 +57,11 @@
     let mapGroup;
     let selectedMapElement;
 
-    let gTransform = {x: 0, y: 0, k: 1}, gStrokeWidth;
+    let gTransform = {x: -135, y: 24, k: 1.2}, gStrokeWidth;
     let clickedCounty = null
 
     const zoomTransform = zoom()
-        .scaleExtent([1, 8])
+        .scaleExtent([1, 10])
         .on("zoom", zoomed)
 
     function zoomed(evt){
@@ -120,9 +120,11 @@
                     class:clicked={clickedCounty && clickedCounty.id === county.id}
                 />
             {/each}
+            <!---Borders-->
             <path class="border" d={pathGenerator(bordersPath)} fill="none" stroke="white" stroke-width="1"/>
         </g>
-        <!---Borders-->
+        <rect y="760" x="-691" width="200" height="40"></rect>
+        <text y="788" x="-691">Zoom in/out [+/-]</text>
     </svg>
 </div>
 
@@ -146,7 +148,8 @@
     }
 
     svg {
-        flex: 1 0 80%
+        flex: 1 0 80%;
+        background-color: #fff;
     }
 
     path:not(.border) {
@@ -161,5 +164,14 @@
     path.active:not(.clicked) {
         opacity: 0.7;
         fill: rgb(22, 97, 208)
+    }
+
+    rect {
+        fill: #eef1f9
+    }
+
+    text {
+        font-size: 25px;
+        fill: #000;
     }
 </style>

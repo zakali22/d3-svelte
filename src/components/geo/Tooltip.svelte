@@ -19,14 +19,16 @@
     .tooltip {
         position: absolute;
         right:0;
-        top: calc(800px - 100px)
+        top: calc(800px - 100px);
+        background: var(--bg-colour, transparent);
+        padding: 15px;
     }
 
     .tooltip h2 {
         font-size: 40px;
         margin-bottom: 5px;
         margin-top: 0;
-        color: #fff;
+        color: var(--font-colour, #fff);;
         font-weight: 600;
     }
 
@@ -34,6 +36,6 @@
         font-size: 25px;
         margin-top: 0;
         font-weight: 300;
-        color: rgba(255, 255, 255, 0.4)
+        color: var(--font-colour, #fff);
     }
 </style>

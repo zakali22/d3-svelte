@@ -29,7 +29,7 @@
     })
 
     /** Define projection */
-    let width = 800, height = width
+    let width = 600, height = width
     $: projection = geoOrthographic()
         .scale(width / 2)
         .rotate([$xRotation, ($yRotation * -1)]) //x,y,z

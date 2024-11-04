@@ -141,6 +141,14 @@
         user-select: none;
     }
 
+    .chart-container {
+        max-width: 70%;
+        /* margin: 0 auto; */
+        position: relative;
+        left: 50%;
+        transform: translateX(-50%);
+    }
+
     h1 {
         margin: 0 0 0.5rem 0;
         font-size: 1.35rem;

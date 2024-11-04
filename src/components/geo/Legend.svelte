@@ -35,7 +35,7 @@
 <style>
     .legend-scale {
         position: absolute;
-        top: calc(800px + 15px);
+        top: calc(var(--chart-height, 600px) + 15px);
         left: 50%;
         transform: translateX(-50%);
         width: 100%;

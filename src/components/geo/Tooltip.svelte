@@ -19,7 +19,7 @@
     .tooltip {
         position: absolute;
         right:0;
-        top: calc(800px - 100px);
+        top: calc(var(--chart-height, 600px) - 100px);
         background: var(--bg-colour, transparent);
         padding: 15px;
     }

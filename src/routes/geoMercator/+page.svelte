@@ -30,7 +30,7 @@
     })
 
     /** Define projection */
-    let width = 1700, height = width / 2
+    let width = 1500, height = width / 2
     $: projection = geoMercator().scale(width / 8).translate([width / 2, height / 1.4])
 
     /** Path function to convert coord into svg path */
@@ -98,7 +98,7 @@
         <h2>Population by Country, 2021</h2>
     </div>
 
-    <div class="chart-container" bind:clientWidth={width}>
+    <div class="chart-container" bind:clientWidth={width} clientHeight={height}>
 
         <svg {width} {height} viewBox="0, 0, {width}, {height}"  bind:this={globe}>
             <!-- Countries -->
@@ -139,10 +139,10 @@
         </svg>
 
         {#if clickedCountryData && clickedCountryData.country}
-            <Tooltip --font-colour="#000" --bg-colour="#fff" data={clickedCountryData} />
+            <Tooltip --chart-height="800px" --font-colour="#000" --bg-colour="#fff" data={clickedCountryData} />
         {/if}
 
-        <Legend --font-colour="#000" colorScale={legendScale} data={clickedCountryData}  />
+        <Legend --chart-height="800px" --font-colour="#000" colorScale={legendScale} data={clickedCountryData}  />
     </div>
 </div>
 

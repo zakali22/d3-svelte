@@ -9,6 +9,7 @@
     import { max } from "d3-array"
     import Glow from "../../components/geo/Glow.svelte"
     import { zoom } from "d3-zoom"
+    import { drag } from "d3-drag"
     import { select } from "d3-selection"
     import { timer } from "d3-timer"
 	import { onMount } from "svelte";
@@ -31,7 +32,7 @@
 
     /** Define projection */
     let width = 1500, height = width / 2
-    $: projection = geoMercator().scale(width / 8).translate([width / 2, height / 1.4])
+    $: projection = geoMercator().scale(width / 7.6).translate([width / 2, height / 1.4])
 
     /** Path function to convert coord into svg path */
     $: path = geoPath(projection)
@@ -58,7 +59,7 @@
     let clickedCountryData = null
 
     const zoomTransform = zoom()
-        .scaleExtent([1, 10])
+        .scaleExtent([width > 1300 ? 1 : 1.5, 5])
         .on("zoom", zoomed)
 
     function zoomed(evt){
@@ -87,20 +88,20 @@
 
     onMount(() => {
         selectedGlobe = select(globe)
-        selectedGlobe.call(zoomTransform)
+        selectedGlobe.call(zoomTransform).on("wheel", event => event.preventDefault());
     })
     
 </script>
 
+<svelte:window bind:innerWidth={width} />
 <div class="wrapper">
     <div class="chart-title">
         <h1>The World at a Glance</h1>
         <h2>Population by Country, 2021</h2>
     </div>
+    <div class="chart-container" {width}>
 
-    <div class="chart-container" bind:clientWidth={width} clientHeight={height}>
-
-        <svg {width} {height} viewBox="0, 0, {width}, {height}"  bind:this={globe}>
+        <svg preserveAspectRatio="xMidYMid slice" {width} {height} viewBox="0, 0, {width}, {height}"  bind:this={globe}>
             <!-- Countries -->
             <!-- svelte-ignore a11y-click-events-have-key-events -->
             <!-- svelte-ignore a11y-no-static-element-interactions -->

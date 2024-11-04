@@ -83,17 +83,27 @@
         $xRotation = -center[0]
         $yRotation = center[1]
     }
+
+    let innerWidth;
+
+    function handleResize(e){
+        console.log(innerWidth)
+        if(innerWidth < 800){
+            return innerWidth
+        }
+    }
 </script>
 
+<svelte:window on:resize={handleResize} bind:innerWidth={innerWidth}/>
 <div class="wrapper">
     <div class="chart-title">
         <h1>The World at a Glance</h1>
         <h2>Population by Country, 2021</h2>
     </div>
 
-    <div class="chart-container" bind:clientWidth={width}>
+    <div class="chart-container">
 
-        <svg {width} {height} bind:this={globe} class:dragging={isDragging}>
+        <svg preserveAspectRatio="xMidYMid slice" width={innerWidth < 800 ? innerWidth - 50 : width} {height} viewBox="0, 0, {width}, {height}" bind:this={globe} class:dragging={isDragging}>
             <!-- Glow effect -->
             <Glow />
             
@@ -158,7 +168,7 @@
             <Tooltip data={tooltipData} />
         {/if}
 
-        <Legend {colorScale} data={tooltipData}  />
+        <Legend  --chart-height="innerWidth < 800 ? innerWidth : width" {colorScale} data={tooltipData}  />
     </div>
 </div>
 

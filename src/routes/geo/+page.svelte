@@ -157,7 +157,7 @@
                     <path 
                         d={path(tooltipData)}
                         fill="transparent"
-                        stroke="white"
+                        stroke="#000"
                         stroke-width="2"
                         in:draw
                     />

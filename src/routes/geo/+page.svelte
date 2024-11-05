@@ -3,6 +3,7 @@
     import world from "../../data/geodata.json";
     import populationData from "../../data/population-data.json";
     import * as topojson from "topojson-client";
+    import { schemeYlOrRd } from "d3"
     import { geoOrthographic, geoPath, geoCentroid } from "d3-geo"
     import { scaleLinear } from "d3-scale"
     import { max } from "d3-array"
@@ -42,7 +43,7 @@
     /** Color scale for population */
     const colorScale = scaleLinear()
         .domain([0, max(populationData, d => d.population)])
-        .range(["#26362e", "#0DCC6C"]);
+        .range(schemeYlOrRd[3]);
 
 
     /** Rotation */
